@@ -161,9 +161,13 @@ const Peer = window.Peer;
       var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
       // render
-      requestAnimationFrame(render);
-      renderer.render(scene, camera);
-      controls.update();
+      var render = function () {
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+        controls.update();
+      }
+
+      render();
     }
   });
 
