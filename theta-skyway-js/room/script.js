@@ -143,9 +143,9 @@ const Peer = window.Peer;
       camera.lookAt(sphere.position);
 
       // helper
-      var axis = new THREE.AxisHelper(1000);
-      axis.position.set(0, 0, 0);
-      scene.add(axis);
+      // var axis = new THREE.AxisHelper(1000);
+      // axis.position.set(0, 0, 0);
+      // scene.add(axis);
 
       // render
       var renderer = new THREE.WebGLRenderer();
