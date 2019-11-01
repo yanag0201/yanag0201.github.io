@@ -95,10 +95,10 @@ const Peer = window.Peer;
       messages.textContent += '== You left ===\n';
 
       // remove all videos
-      videos.forEach(remoteVideo => {
-        remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-        remoteVideo.srcObject = null;
-        remoteVideo.remove();
+      Object.keys(videos).forEach((peerId) => {
+        videos[peerId].srcObject.getTracks().forEach(track => track.stop());
+        videos[peerId].srcObject = null;
+        videos[peerId].remove();
       });
       videos = {};
 
