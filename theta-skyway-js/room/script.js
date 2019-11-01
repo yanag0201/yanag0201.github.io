@@ -1,7 +1,6 @@
 const Peer = window.Peer;
 
 (async function main() {
-  const localVideo = document.getElementById('js-local-stream');
   const joinTrigger = document.getElementById('js-join-trigger');
   const leaveTrigger = document.getElementById('js-leave-trigger');
   const remoteVideos = document.getElementById('js-remote-streams');
@@ -26,26 +25,13 @@ const Peer = window.Peer;
     () => (roomMode.textContent = getRoomModeByHash())
   );
 
-  // const localStream = await navigator.mediaDevices
-  //   .getUserMedia({
-  //     audio: true,
-  //     video: true,
-  //   })
-  //   .catch(console.error);
-
-  // Render local stream
-  // localVideo.muted = true;
-  // localVideo.srcObject = localStream;
-  // localVideo.playsInline = true;
-  // await localVideo.play().catch(console.error);
-
-  // eslint-disable-next-line require-atomic-updates
   const peer = (window.peer = new Peer({
     key: window.__SKYWAY_KEY__,
     debug: 3,
   }));
 
-  // Register join handler
+  var videos = {};
+
   joinTrigger.addEventListener('click', () => {
     // Note that you need to ensure the peer has connected to signaling server
     // before using methods of peer instance.
@@ -71,8 +57,10 @@ const Peer = window.Peer;
       newVideo.srcObject = stream;
       newVideo.playsInline = true;
       // mark peerId to find it later at peerLeave event
-      newVideo.setAttribute('data-peer-id', stream.peerId);
-      remoteVideos.append(newVideo);
+      // newVideo.setAttribute('data-peer-id', stream.peerId);
+      videos[stream.peerId] = newVideo;
+      // remoteVideos.append(newVideo);
+      setupPanorama(newVideo, stream.peerId);
       await newVideo.play().catch(console.error);
     });
 
@@ -83,12 +71,20 @@ const Peer = window.Peer;
 
     // for closing room members
     room.on('peerLeave', peerId => {
-      const remoteVideo = remoteVideos.querySelector(
-        `[data-peer-id=${peerId}]`
+      // remove video
+      const remoteVideo = videos[peerId];
+      if (remoteVideo) {
+        remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+        remoteVideo.srcObject = null;
+        remoteVideo.remove();
+        delete videos[peerId];
+      }
+      const remoteRenderer = remoteVideos.querySelector(
+        `[renderer-data-peer-id=${peerId}]`
       );
-      remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-      remoteVideo.srcObject = null;
-      remoteVideo.remove();
+      if (remoteRenderer) {
+        remoteRenderer.remove();
+      }
 
       messages.textContent += `=== ${peerId} left ===\n`;
     });
@@ -97,10 +93,17 @@ const Peer = window.Peer;
     room.once('close', () => {
       sendTrigger.removeEventListener('click', onClickSend);
       messages.textContent += '== You left ===\n';
-      Array.from(remoteVideos.children).forEach(remoteVideo => {
+
+      // remove all videos
+      videos.forEach(remoteVideo => {
         remoteVideo.srcObject.getTracks().forEach(track => track.stop());
         remoteVideo.srcObject = null;
         remoteVideo.remove();
+      });
+      videos = {};
+
+      remoteVideos.children.forEach(remoteRenderer => {
+        remoteRenderer.remove();
       });
     });
 
@@ -113,6 +116,54 @@ const Peer = window.Peer;
 
       messages.textContent += `${peer.id}: ${localText.value}\n`;
       localText.value = '';
+    }
+
+    function setupPanorama(video, peerId) {
+      var width = 640;
+      var height = 320;
+
+      // scene
+      var scene = new THREE.Scene();
+
+      // mesh
+      var geometry = new THREE.SphereGeometry(5, 60, 40);
+      geometry.scale(- 1, 1, 1);
+
+      // video
+      var texture = new THREE.VideoTexture(video);
+      texture.minFilter = THREE.LinearFilter;
+
+      var material = new THREE.MeshBasicMaterial({ map: texture });
+      sphere = new THREE.Mesh(geometry, material);
+      scene.add(sphere);
+
+      // camera
+      var camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
+      camera.position.set(0, 0, 0.1);
+      camera.lookAt(sphere.position);
+
+      // helper
+      var axis = new THREE.AxisHelper(1000);
+      axis.position.set(0, 0, 0);
+      scene.add(axis);
+
+      // render
+      var renderer = new THREE.WebGLRenderer();
+      renderer.setSize(width, height);
+      renderer.setClearColor({ color: 0x000000 });
+      // document.getElementById('stage').appendChild(renderer.domElement);
+      renderer.domElement.setAttribute('renderer-data-peer-id', peerId);
+      remoteVideos.append(renderer.domElement);
+
+      renderer.render(scene, camera);
+
+      // control
+      var controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+      // render
+      requestAnimationFrame(render);
+      renderer.render(scene, camera);
+      controls.update();
     }
   });
 
