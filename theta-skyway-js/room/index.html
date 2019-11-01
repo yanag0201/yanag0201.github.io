@@ -15,15 +15,11 @@
       </p>
       <div class="room">
         <div>
-          <video id="js-local-stream"></video>
           <span id="js-room-mode"></span>:
           <input type="text" placeholder="Room Name" id="js-room-id">
           <button id="js-join-trigger">Join</button>
           <button id="js-leave-trigger">Leave</button>
         </div>
-
-        <div class="remote-streams" id="js-remote-streams"></div>
-
         <div>
           <pre class="messages" id="js-messages"></pre>
           <input type="text" id="js-local-text">
@@ -31,7 +27,7 @@
         </div>
       </div>
       <p class="meta" id="js-meta"></p>
-    </div>
+    <div class="remote-streams" id="js-remote-streams" style=" width: 720px; height: 480px; "></div></div>
     <script src="//cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
     <script src="./key.js"></script>
     <script src="./script.js"></script>
