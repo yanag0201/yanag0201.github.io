@@ -102,7 +102,7 @@ const Peer = window.Peer;
       });
       videos = {};
 
-      remoteVideos.children.forEach(remoteRenderer => {
+      Array.from(remoteVideos.children).forEach(remoteRenderer => {
         remoteRenderer.remove();
       });
     });
