@@ -74,7 +74,6 @@ const Peer = window.Peer;
       // remove video
       const remoteVideo = videos[peerId];
       if (remoteVideo) {
-        console.log('### remoteVideo: ', remoteVideo.videoWidth, remoteVideo.videoHeight);
         remoteVideo.srcObject.getTracks().forEach(track => track.stop());
         remoteVideo.srcObject = null;
         remoteVideo.remove();
@@ -120,8 +119,8 @@ const Peer = window.Peer;
     }
 
     function setupPanorama(video, peerId) {
-      var width = 640;
-      var height = 360;
+      var width = 480;
+      var height = 270;
 
       // scene
       var scene = new THREE.Scene();
