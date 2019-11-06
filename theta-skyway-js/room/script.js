@@ -59,7 +59,6 @@ const Peer = window.Peer;
       // mark peerId to find it later at peerLeave event
       // newVideo.setAttribute('data-peer-id', stream.peerId);
       videos[stream.peerId] = newVideo;
-      console.log('### newVideo: ', newVideo.videoWidth, newVideo.videoHeight);
       // remoteVideos.append(newVideo);
       setupPanorama(newVideo, stream.peerId);
       await newVideo.play().catch(console.error);
@@ -75,6 +74,7 @@ const Peer = window.Peer;
       // remove video
       const remoteVideo = videos[peerId];
       if (remoteVideo) {
+        console.log('### remoteVideo: ', remoteVideo.videoWidth, remoteVideo.videoHeight);
         remoteVideo.srcObject.getTracks().forEach(track => track.stop());
         remoteVideo.srcObject = null;
         remoteVideo.remove();
