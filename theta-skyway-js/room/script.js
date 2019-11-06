@@ -74,6 +74,7 @@ const Peer = window.Peer;
       // remove video
       const remoteVideo = videos[peerId];
       if (remoteVideo) {
+        console.log('### remoteVideo: ', remoteVideo.videoWidth, newVideo.videoHeight);
         remoteVideo.srcObject.getTracks().forEach(track => track.stop());
         remoteVideo.srcObject = null;
         remoteVideo.remove();
