@@ -25,7 +25,7 @@ video {
 .container {
   margin-left: auto;
   margin-right: auto;
-  width: 980px;
+  width: 640px;
 }
 
 /* p2p-media styles */
@@ -52,15 +52,16 @@ video {
 
 .p2p-data .messages {
   background-color: #eee;
-  min-height: 100px;
+  height: 100px;
   padding: 8px;
   margin-top: 0;
+  overflow: scroll;
 }
 
 /* room */
 .room {
   display: grid;
-  grid-template-columns: 30% 40% 30%;
+  grid-template-columns: 50% 50%;
   gap: 8px;
   margin: 0 8px;
 }
