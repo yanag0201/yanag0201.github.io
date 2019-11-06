@@ -59,6 +59,7 @@ const Peer = window.Peer;
       // mark peerId to find it later at peerLeave event
       // newVideo.setAttribute('data-peer-id', stream.peerId);
       videos[stream.peerId] = newVideo;
+      console.log('### newVideo: ', newVideo.videoWidth, newVideo.videoHeight);
       // remoteVideos.append(newVideo);
       setupPanorama(newVideo, stream.peerId);
       await newVideo.play().catch(console.error);
