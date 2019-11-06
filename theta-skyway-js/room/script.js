@@ -120,7 +120,7 @@ const Peer = window.Peer;
 
     function setupPanorama(video, peerId) {
       var width = 640;
-      var height = 320;
+      var height = 480;
 
       // scene
       var scene = new THREE.Scene();
