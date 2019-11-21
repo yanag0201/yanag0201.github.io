@@ -64,10 +64,10 @@ const Peer = window.Peer;
        newVideo.play().catch(console.error);
     });
 
-    room.on('data', ({ data, src }) => {
-      // Show a message sent to the room and who sent
-      messages.textContent += `${src}: ${data}\n`;
-    });
+    // room.on('data', ({ data, src }) => {
+    //   // Show a message sent to the room and who sent
+    //   messages.textContent += `${src}: ${data}\n`;
+    // });
 
     // for closing room members
     room.on('peerLeave', peerId => {
