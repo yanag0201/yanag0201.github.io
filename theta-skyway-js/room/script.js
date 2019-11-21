@@ -1,4 +1,4 @@
-const Peer = window.Peer;
+// const Peer = window.Peer;
 
 ( function main() {
   const joinTrigger = document.getElementById('js-join-trigger');
