@@ -1,6 +1,6 @@
-// const Peer = window.Peer;
+const Peer = window.Peer;
 
-( function main() {
+(async function main() {
   const joinTrigger = document.getElementById('js-join-trigger');
   const leaveTrigger = document.getElementById('js-leave-trigger');
   const remoteVideos = document.getElementById('js-remote-streams');
@@ -52,7 +52,7 @@
     });
 
     // Render remote stream for new peer join in the room
-    room.on('stream',  stream => {
+    room.on('stream', async stream => {
       const newVideo = document.createElement('video');
       newVideo.srcObject = stream;
       newVideo.playsInline = true;
@@ -61,13 +61,13 @@
       videos[stream.peerId] = newVideo;
       // remoteVideos.append(newVideo);
       setupPanorama(newVideo, stream.peerId);
-       newVideo.play().catch(console.error);
+      await newVideo.play().catch(console.error);
     });
 
-    // room.on('data', ({ data, src }) => {
-    //   // Show a message sent to the room and who sent
-    //   messages.textContent += `${src}: ${data}\n`;
-    // });
+    room.on('data', ({ data, src }) => {
+      // Show a message sent to the room and who sent
+      messages.textContent += `${src}: ${data}\n`;
+    });
 
     // for closing room members
     room.on('peerLeave', peerId => {
