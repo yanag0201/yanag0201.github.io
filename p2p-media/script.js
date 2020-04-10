@@ -44,7 +44,9 @@ const Peer = window.Peer;
     }
 
     const mediaConnection = peer.call(remoteId.value, null, {
-      videoCodec: 'H264'
+      videoCodec: 'H264',
+      videoReceiveEnabled: true,
+      videoBandwidth: 90000
     });
 
     mediaConnection.on('stream', async stream => {
