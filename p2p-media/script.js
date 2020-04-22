@@ -15,20 +15,20 @@ const Peer = window.Peer;
     SDK: ${sdkSrc ? sdkSrc.src : 'unknown'}
   `.trim();
 
-  // const localStream = await navigator.mediaDevices
-  //   .getUserMedia({
-  //     // audio: true,
-  //     video: {
-  //       frameRate : { max: 10 }
-  //     },
-  //   })
-  //   .catch(console.error);
+  const localStream = await navigator.mediaDevices
+    .getUserMedia({
+      // audio: true,
+      video: {
+        frameRate : { max: 10 }
+      },
+    })
+    .catch(console.error);
 
   // Render local stream
-  // localVideo.muted = true;
-  // localVideo.srcObject = localStream;
-  // localVideo.playsInline = true;
-  // await localVideo.play().catch(console.error);
+  localVideo.muted = true;
+  localVideo.srcObject = localStream;
+  localVideo.playsInline = true;
+  await localVideo.play().catch(console.error);
 
   const peer = (window.peer = new Peer({
     key: '64dea4a9-c508-4de4-94a5-153965fee9c9',
@@ -67,21 +67,21 @@ const Peer = window.Peer;
   // Register callee handler
   peer.on('call', mediaConnection => {
     mediaConnection.close(true)
-    // mediaConnection.answer(localStream);
+    mediaConnection.answer(localStream);
 
-    // mediaConnection.on('stream', async stream => {
-    //   // Render remote stream for callee
-    //   remoteVideo.srcObject = stream;
-    //   remoteVideo.playsInline = true;
-    //   await remoteVideo.play().catch(console.error);
-    // });
+    mediaConnection.on('stream', async stream => {
+      // Render remote stream for callee
+      remoteVideo.srcObject = stream;
+      remoteVideo.playsInline = true;
+      await remoteVideo.play().catch(console.error);
+    });
 
-    // mediaConnection.once('close', () => {
-    //   remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-    //   remoteVideo.srcObject = null;
-    // });
+    mediaConnection.once('close', () => {
+      remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+      remoteVideo.srcObject = null;
+    });
 
-    // closeTrigger.addEventListener('click', () => mediaConnection.close(true));
+    closeTrigger.addEventListener('click', () => mediaConnection.close(true));
   });
 
   peer.on('error', console.error);
